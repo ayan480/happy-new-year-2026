@@ -136,4 +136,140 @@ canvas {
   color: #ddd;
   opacity: 0;
   animation: fadeIn 2s forwards;
-  an
+  animation-delay: 5.3s;
+}
+
+.signature {
+  margin-top: 28px;
+  color: var(--gold);
+  font-style: italic;
+}
+
+@keyframes fadeIn {
+  to { opacity: 1; }
+}
+
+/* Music button */
+.music {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 4;
+  color: var(--gold);
+  border: 1px solid rgba(214,178,94,0.6);
+  padding: 8px 16px;
+  border-radius: 30px;
+  font-size: 12px;
+  letter-spacing: 2px;
+  background: transparent;
+  cursor: pointer;
+}
+</style>
+</head>
+
+<body>
+
+<canvas id="particles"></canvas>
+
+<div class="start" id="start">
+  <span>CLICK TO BEGIN</span>
+</div>
+
+<button class="music" id="musicBtn">MUSIC ON</button>
+
+<div class="container">
+  <div class="year-box">
+    <div class="year old">2025</div>
+    <div class="year new">2026</div>
+  </div>
+
+  <div class="line"></div>
+
+  <div class="message">
+    As 2025 comes to a close, we carry forward the lessons, the growth,
+    and the strength it shaped within us.<br><br>
+
+    May 2026 bring clarity in decisions, consistency in effort,
+    and quiet confidence in everything you pursue.
+    Let it be a year of meaningful progress and well-earned success.<br><br>
+
+    Here’s to moving forward — calmly, boldly, and with purpose.
+    <div class="signature">— Ayan</div>
+  </div>
+</div>
+
+<script>
+/* Start interaction */
+const start = document.getElementById("start");
+start.onclick = () => {
+  start.classList.add("hidden");
+  startMusic();
+};
+
+/* Ambient particles */
+const canvas = document.getElementById("particles");
+const ctx = canvas.getContext("2d");
+
+function resize() {
+  canvas.width = innerWidth;
+  canvas.height = innerHeight;
+}
+resize();
+addEventListener("resize", resize);
+
+const dots = Array.from({ length: 120 }, () => ({
+  x: Math.random() * canvas.width,
+  y: Math.random() * canvas.height,
+  r: Math.random() * 1.2 + 0.5,
+  v: Math.random() * 0.25 + 0.05
+}));
+
+function animate() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = "rgba(214,178,94,0.35)";
+  dots.forEach(d => {
+    d.y -= d.v;
+    if (d.y < 0) d.y = canvas.height;
+    ctx.beginPath();
+    ctx.arc(d.x, d.y, d.r, 0, Math.PI * 2);
+    ctx.fill();
+  });
+  requestAnimationFrame(animate);
+}
+animate();
+
+/* Music (New Year ambient tone) */
+let audioCtx, osc, gain, playing = false;
+const btn = document.getElementById("musicBtn");
+
+function startMusic() {
+  if (playing) return;
+  audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  osc = audioCtx.createOscillator();
+  gain = audioCtx.createGain();
+
+  osc.type = "sine";
+  osc.frequency.value = 432;
+  gain.gain.value = 0.04;
+
+  osc.connect(gain);
+  gain.connect(audioCtx.destination);
+  osc.start();
+  playing = true;
+}
+
+btn.onclick = () => {
+  if (!playing) {
+    startMusic();
+    btn.textContent = "MUSIC OFF";
+  } else {
+    osc.stop();
+    audioCtx.close();
+    playing = false;
+    btn.textContent = "MUSIC ON";
+  }
+};
+</script>
+
+</body>
+</html>
