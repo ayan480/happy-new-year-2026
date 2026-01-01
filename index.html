@@ -2,188 +2,267 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Happy New Year 2026 | Ayan</title>
+  <title>Welcome 2026 | Ayan</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <style>
+    :root {
+      --gold: #d4af37;
+      --soft-gold: rgba(212,175,55,0.6);
+    }
+
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      font-family: 'Segoe UI', Tahoma, sans-serif;
+      font-family: "Georgia", "Times New Roman", serif;
     }
 
     body {
       height: 100vh;
-      background: radial-gradient(circle at top, #1a1a1a, #000);
-      color: #fff;
+      background: radial-gradient(circle at top, #111 0%, #000 70%);
+      color: #f5f5f5;
       overflow: hidden;
+    }
+
+    /* Overlay */
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: linear-gradient(180deg, #000, #050505);
       display: flex;
       align-items: center;
       justify-content: center;
+      z-index: 5;
+      cursor: pointer;
+      transition: opacity 1.2s ease;
     }
 
+    .overlay.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .overlay span {
+      font-size: 18px;
+      letter-spacing: 3px;
+      color: var(--soft-gold);
+    }
+
+    /* Center content */
+    .container {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 20px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .year-wrapper {
+      position: relative;
+      height: 130px;
+      margin-bottom: 30px;
+    }
+
+    .year {
+      font-size: clamp(80px, 12vw, 120px);
+      font-weight: 700;
+      letter-spacing: 8px;
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .year.old {
+      color: #555;
+      animation: dissolve 2.5s ease forwards;
+    }
+
+    .year.new {
+      color: var(--gold);
+      opacity: 0;
+      animation: reveal 2.5s ease forwards;
+      animation-delay: 2.5s;
+    }
+
+    @keyframes dissolve {
+      to {
+        opacity: 0;
+        filter: blur(8px);
+        transform: translate(-50%, -40px);
+      }
+    }
+
+    @keyframes reveal {
+      from {
+        opacity: 0;
+        letter-spacing: 25px;
+        filter: blur(6px);
+      }
+      to {
+        opacity: 1;
+        letter-spacing: 8px;
+        filter: blur(0);
+      }
+    }
+
+    .divider {
+      width: 120px;
+      height: 1px;
+      background: var(--soft-gold);
+      margin: 25px auto;
+      opacity: 0;
+      animation: fadeIn 2s forwards;
+      animation-delay: 5s;
+    }
+
+    .message {
+      max-width: 760px;
+      font-size: clamp(17px, 2.5vw, 20px);
+      line-height: 1.9;
+      opacity: 0;
+      animation: fadeIn 2s forwards;
+      animation-delay: 5.2s;
+      color: #ddd;
+    }
+
+    .signature {
+      margin-top: 28px;
+      font-style: italic;
+      color: var(--gold);
+    }
+
+    @keyframes fadeIn {
+      to { opacity: 1; }
+    }
+
+    /* Ambient particles */
     canvas {
       position: fixed;
       inset: 0;
       z-index: 1;
     }
 
-    .container {
-      position: relative;
-      z-index: 2;
-      text-align: center;
-      padding: 20px;
-    }
-
-    .year {
-      font-size: clamp(70px, 12vw, 110px);
-      font-weight: 800;
-      letter-spacing: 6px;
-      position: absolute;
-      left: 50%;
-      transform: translateX(-50%);
-      animation-duration: 2s;
-      animation-fill-mode: forwards;
-    }
-
-    .year.old {
-      animation-name: exitYear;
-    }
-
-    .year.new {
-      animation-name: enterYear;
-      opacity: 0;
-    }
-
-    @keyframes exitYear {
-      from { transform: translate(-50%, 0); opacity: 1; }
-      to { transform: translate(-50%, -180px); opacity: 0; }
-    }
-
-    @keyframes enterYear {
-      from { transform: translate(-50%, 180px); opacity: 0; }
-      to { transform: translate(-50%, 0); opacity: 1; }
-    }
-
-    .message {
-      margin-top: 170px;
-      max-width: 760px;
-      font-size: clamp(16px, 2.5vw, 20px);
-      line-height: 1.8;
-      opacity: 0;
-      animation: fadeIn 2s ease forwards;
-      animation-delay: 2.6s;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .from {
-      margin-top: 25px;
-      font-size: 18px;
-      font-style: italic;
-      opacity: 0.9;
-    }
-
-    .music-btn {
+    /* Music button */
+    .music {
       position: fixed;
-      bottom: 20px;
-      right: 20px;
-      z-index: 3;
-      background: rgba(255,255,255,0.1);
-      border: 1px solid rgba(255,255,255,0.3);
-      color: white;
-      padding: 10px 16px;
+      bottom: 24px;
+      right: 24px;
+      z-index: 4;
+      font-size: 13px;
+      letter-spacing: 2px;
+      color: var(--soft-gold);
+      border: 1px solid var(--soft-gold);
+      padding: 8px 16px;
       border-radius: 30px;
+      background: transparent;
       cursor: pointer;
-      backdrop-filter: blur(6px);
     }
   </style>
 </head>
 
 <body>
 
-<canvas id="fireworks"></canvas>
+<canvas id="particles"></canvas>
 
-<button class="music-btn" id="musicBtn">🔊 Music On</button>
+<div class="overlay" id="overlay">
+  <span>CLICK TO BEGIN</span>
+</div>
+
+<button class="music" id="musicBtn">MUSIC ON</button>
 
 <div class="container">
-  <div class="year old">2025</div>
-  <div class="year new" id="newYear">2026</div>
+  <div class="year-wrapper">
+    <div class="year old">2025</div>
+    <div class="year new">2026</div>
+  </div>
+
+  <div class="divider"></div>
 
   <div class="message">
-    As 2025 gently fades into memories, 2026 arrives with renewed hope, fresh energy, and endless opportunities.<br><br>
+    As the final moments of 2025 quietly pass, a new chapter unfolds.<br><br>
 
-    May this year bring success to your goals, peace to your mind, strength to your journey, and happiness in every little moment you live.<br><br>
+    May 2026 bring clarity to your ambitions, confidence to your decisions,
+    and meaning to every step you take.  
+    May growth feel natural, success feel earned, and peace remain constant.<br><br>
 
-    Let’s dream bigger, work smarter, and smile louder in 2026.
-    <div class="from">— Warm wishes from Ayan</div>
+    Here’s to progress, purpose, and a year lived with intention.
+    <div class="signature">— Ayan</div>
   </div>
 </div>
 
 <script>
-  /* Year Animation */
-  setTimeout(() => {
-    document.getElementById("newYear").style.opacity = 1;
-  }, 2000);
+  /* Overlay */
+  const overlay = document.getElementById("overlay");
+  overlay.addEventListener("click", () => {
+    overlay.classList.add("hidden");
+    startMusic();
+  });
 
-  /* Fireworks */
-  const canvas = document.getElementById("fireworks");
+  /* Ambient particles */
+  const canvas = document.getElementById("particles");
   const ctx = canvas.getContext("2d");
 
   function resize() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+    canvas.width = innerWidth;
+    canvas.height = innerHeight;
   }
   resize();
-  window.addEventListener("resize", resize);
+  addEventListener("resize", resize);
 
-  function firework() {
-    const x = Math.random() * canvas.width;
-    const y = Math.random() * canvas.height * 0.5;
-    const r = Math.random() * 3 + 2;
+  const dots = Array.from({ length: 120 }, () => ({
+    x: Math.random() * canvas.width,
+    y: Math.random() * canvas.height,
+    r: Math.random() * 1.5 + 0.5,
+    v: Math.random() * 0.2 + 0.05
+  }));
 
-    ctx.beginPath();
-    ctx.arc(x, y, r, 0, Math.PI * 2);
-    ctx.fillStyle = `hsl(${Math.random() * 360}, 100%, 60%)`;
-    ctx.fill();
+  function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = "rgba(212,175,55,0.35)";
+    dots.forEach(d => {
+      d.y -= d.v;
+      if (d.y < 0) d.y = canvas.height;
+      ctx.beginPath();
+      ctx.arc(d.x, d.y, d.r, 0, Math.PI * 2);
+      ctx.fill();
+    });
+    requestAnimationFrame(animate);
   }
+  animate();
 
-  setInterval(firework, 70);
-
-  /* Background Music (Soft Tone) */
-  let audioCtx;
-  let oscillator;
-  let isPlaying = false;
-
+  /* Music */
+  let ctxAudio, osc, playing = false;
   const btn = document.getElementById("musicBtn");
 
-  btn.addEventListener("click", () => {
-    if (!isPlaying) {
-      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      oscillator = audioCtx.createOscillator();
-      const gain = audioCtx.createGain();
+  function startMusic() {
+    if (playing) return;
+    ctxAudio = new (AudioContext || webkitAudioContext)();
+    osc = ctxAudio.createOscillator();
+    const gain = ctxAudio.createGain();
+    osc.frequency.value = 396;
+    gain.gain.value = 0.04;
+    osc.connect(gain);
+    gain.connect(ctxAudio.destination);
+    osc.start();
+    playing = true;
+  }
 
-      oscillator.type = "sine";
-      oscillator.frequency.setValueAtTime(432, audioCtx.currentTime);
-      gain.gain.value = 0.05;
-
-      oscillator.connect(gain);
-      gain.connect(audioCtx.destination);
-      oscillator.start();
-
-      btn.textContent = "🔇 Music Off";
-      isPlaying = true;
+  btn.onclick = () => {
+    if (!playing) {
+      startMusic();
+      btn.textContent = "MUSIC OFF";
     } else {
-      oscillator.stop();
-      audioCtx.close();
-      btn.textContent = "🔊 Music On";
-      isPlaying = false;
+      osc.stop();
+      ctxAudio.close();
+      playing = false;
+      btn.textContent = "MUSIC ON";
     }
-  });
+  };
 </script>
 
 </body>
