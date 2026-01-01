@@ -1,14 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
+<meta charset="UTF-8">
 <title>Welcome 2026 | Ayan</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
 :root {
   --gold: #d6b25e;
-  --bg: #050505;
 }
 
 * {
@@ -19,7 +18,7 @@
 }
 
 body {
-  background: radial-gradient(circle at top, #111, var(--bg));
+  background: radial-gradient(circle at top, #111, #050505);
   height: 100vh;
   overflow: hidden;
   color: #eee;
@@ -52,10 +51,10 @@ canvas {
 .start span {
   color: var(--gold);
   letter-spacing: 4px;
-  font-size: 16px;
+  font-size: 15px;
 }
 
-/* Main layout */
+/* Layout */
 .container {
   position: relative;
   z-index: 2;
@@ -139,14 +138,32 @@ canvas {
   animation-delay: 5.3s;
 }
 
-.signature {
-  margin-top: 28px;
-  color: var(--gold);
-  font-style: italic;
-}
-
 @keyframes fadeIn {
   to { opacity: 1; }
+}
+
+/* Signature */
+.signature {
+  margin-top: 35px;
+  width: 200px;
+  opacity: 0;
+  animation: fadeIn 1.5s forwards;
+  animation-delay: 6.8s;
+}
+
+.signature path {
+  fill: none;
+  stroke: var(--gold);
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 1000;
+  animation: draw 3s ease forwards;
+  animation-delay: 6.8s;
+}
+
+@keyframes draw {
+  to { stroke-dashoffset: 0; }
 }
 
 /* Music button */
@@ -177,6 +194,10 @@ canvas {
 
 <button class="music" id="musicBtn">MUSIC ON</button>
 
+<audio id="bgMusic" loop>
+  <source src="newyear-music.mp3" type="audio/mpeg">
+</audio>
+
 <div class="container">
   <div class="year-box">
     <div class="year old">2025</div>
@@ -186,27 +207,44 @@ canvas {
   <div class="line"></div>
 
   <div class="message">
-    As 2025 comes to a close, we carry forward the lessons, the growth,
-    and the strength it shaped within us.<br><br>
+    As 2025 comes to a close, we carry forward the lessons,
+    the growth, and the strength it shaped within us.<br><br>
 
     May 2026 bring clarity in decisions, consistency in effort,
     and quiet confidence in everything you pursue.
-    Let it be a year of meaningful progress and well-earned success.<br><br>
-
-    Here’s to moving forward — calmly, boldly, and with purpose.
-    <div class="signature">— Ayan</div>
+    Let it be a year of meaningful progress and well-earned success.
   </div>
+
+  <!-- Animated Signature -->
+  <svg class="signature" viewBox="0 0 400 120">
+    <path d="M20 80 Q60 20 110 70 T200 60 Q260 30 320 70" />
+  </svg>
 </div>
 
 <script>
-/* Start interaction */
+/* Start */
 const start = document.getElementById("start");
+const music = document.getElementById("bgMusic");
+const btn = document.getElementById("musicBtn");
+
 start.onclick = () => {
   start.classList.add("hidden");
-  startMusic();
+  music.play();
+  btn.textContent = "MUSIC OFF";
 };
 
-/* Ambient particles */
+/* Music toggle */
+btn.onclick = () => {
+  if (music.paused) {
+    music.play();
+    btn.textContent = "MUSIC OFF";
+  } else {
+    music.pause();
+    btn.textContent = "MUSIC ON";
+  }
+};
+
+/* Particles */
 const canvas = document.getElementById("particles");
 const ctx = canvas.getContext("2d");
 
@@ -237,38 +275,6 @@ function animate() {
   requestAnimationFrame(animate);
 }
 animate();
-
-/* Music (New Year ambient tone) */
-let audioCtx, osc, gain, playing = false;
-const btn = document.getElementById("musicBtn");
-
-function startMusic() {
-  if (playing) return;
-  audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  osc = audioCtx.createOscillator();
-  gain = audioCtx.createGain();
-
-  osc.type = "sine";
-  osc.frequency.value = 432;
-  gain.gain.value = 0.04;
-
-  osc.connect(gain);
-  gain.connect(audioCtx.destination);
-  osc.start();
-  playing = true;
-}
-
-btn.onclick = () => {
-  if (!playing) {
-    startMusic();
-    btn.textContent = "MUSIC OFF";
-  } else {
-    osc.stop();
-    audioCtx.close();
-    playing = false;
-    btn.textContent = "MUSIC ON";
-  }
-};
 </script>
 
 </body>
