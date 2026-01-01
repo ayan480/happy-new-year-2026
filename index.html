@@ -1,90 +1,190 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Happy New Year 2026</title>
+  <meta charset="UTF-8">
+  <title>Happy New Year 2026 | Ayan</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <style>
-    :root{--bg:#0b1020;--card:#0f1724;--accent:#ffdd57}
-    *{box-sizing:border-box}
-    html,body{height:100%;margin:0}
-    body{display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg,#091227 0%,#041021 100%);color:#fff;font-family:Inter,Segoe UI,Roboto,Helvetica,Arial,sans-serif}
-    .card{max-width:900px;width:96%;background:rgba(255,255,255,0.04);padding:2.5rem;border-radius:16px;box-shadow:0 10px 30px rgba(2,6,23,0.6);text-align:center}
-    h1{font-size:clamp(2rem,5vw,4rem);margin:0 0 0.5rem;color:var(--accent);text-shadow:0 6px 18px rgba(255,221,87,0.08)}
-    p{margin:0 0 1.25rem;color:#cbd5e1}
-    .btn{background:linear-gradient(90deg,#ff8a00,#ff3d81);border:0;padding:0.6rem 1rem;border-radius:999px;color:#081124;font-weight:700;cursor:pointer}
-    .meta{font-size:0.9rem;color:#94a3b8;margin-top:0.75rem}
-    /* confetti */
-    .confetti{position:fixed;inset:0;pointer-events:none;overflow:hidden}
-    .piece{position:absolute;width:10px;height:14px;opacity:0;transform-origin:center;will-change:transform,opacity}
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, sans-serif;
+    }
+
+    body {
+      height: 100vh;
+      background: radial-gradient(circle at top, #1a1a1a, #000);
+      color: #fff;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    canvas {
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+    }
+
+    .container {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      padding: 20px;
+    }
+
+    .year {
+      font-size: clamp(70px, 12vw, 110px);
+      font-weight: 800;
+      letter-spacing: 6px;
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      animation-duration: 2s;
+      animation-fill-mode: forwards;
+    }
+
+    .year.old {
+      animation-name: exitYear;
+    }
+
+    .year.new {
+      animation-name: enterYear;
+      opacity: 0;
+    }
+
+    @keyframes exitYear {
+      from { transform: translate(-50%, 0); opacity: 1; }
+      to { transform: translate(-50%, -180px); opacity: 0; }
+    }
+
+    @keyframes enterYear {
+      from { transform: translate(-50%, 180px); opacity: 0; }
+      to { transform: translate(-50%, 0); opacity: 1; }
+    }
+
+    .message {
+      margin-top: 170px;
+      max-width: 760px;
+      font-size: clamp(16px, 2.5vw, 20px);
+      line-height: 1.8;
+      opacity: 0;
+      animation: fadeIn 2s ease forwards;
+      animation-delay: 2.6s;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .from {
+      margin-top: 25px;
+      font-size: 18px;
+      font-style: italic;
+      opacity: 0.9;
+    }
+
+    .music-btn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 3;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.3);
+      color: white;
+      padding: 10px 16px;
+      border-radius: 30px;
+      cursor: pointer;
+      backdrop-filter: blur(6px);
+    }
   </style>
 </head>
+
 <body>
-  <div class="card">
-    <h1>Happy New Year 2026!</h1>
-    <p>Wishing you a joyful, healthy, and prosperous year ahead — cheers to new beginnings!</p>
-    <button id="toggle" class="btn">Celebrate 🎉</button>
-    <div class="meta">Created by <strong>ayan480</strong></div>
+
+<canvas id="fireworks"></canvas>
+
+<button class="music-btn" id="musicBtn">🔊 Music On</button>
+
+<div class="container">
+  <div class="year old">2025</div>
+  <div class="year new" id="newYear">2026</div>
+
+  <div class="message">
+    As 2025 gently fades into memories, 2026 arrives with renewed hope, fresh energy, and endless opportunities.<br><br>
+
+    May this year bring success to your goals, peace to your mind, strength to your journey, and happiness in every little moment you live.<br><br>
+
+    Let’s dream bigger, work smarter, and smile louder in 2026.
+    <div class="from">— Warm wishes from Ayan</div>
   </div>
+</div>
 
-  <div class="confetti" id="confetti"></div>
+<script>
+  /* Year Animation */
+  setTimeout(() => {
+    document.getElementById("newYear").style.opacity = 1;
+  }, 2000);
 
-  <script>
-    // Simple confetti generator
-    const confettiRoot = document.getElementById('confetti');
-    const btn = document.getElementById('toggle');
+  /* Fireworks */
+  const canvas = document.getElementById("fireworks");
+  const ctx = canvas.getContext("2d");
 
-    function rand(min, max){return Math.random()*(max-min)+min}
+  function resize() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  resize();
+  window.addEventListener("resize", resize);
 
-    function makePiece(){
-      const el = document.createElement('div');
-      el.className = 'piece';
-      const colors = ['#ff3d81','#ff8a00','#ffd54a','#7ee787','#7ad3ff','#c084fc'];
-      el.style.background = colors[Math.floor(Math.random()*colors.length)];
-      el.style.left = rand(0,100) + '%';
-      el.style.top = rand(-10,0) + '%';
-      el.style.width = rand(6,12) + 'px';
-      el.style.height = rand(8,16) + 'px';
-      el.style.opacity = '1';
-      el.style.transform = `rotate(${rand(0,360)}deg)`;
-      confettiRoot.appendChild(el);
+  function firework() {
+    const x = Math.random() * canvas.width;
+    const y = Math.random() * canvas.height * 0.5;
+    const r = Math.random() * 3 + 2;
 
-      const duration = rand(2500,4200);
-      const destX = rand(-25,25);
-      const destY = 100 + rand(0,30);
-      const rotate = rand(200,800);
+    ctx.beginPath();
+    ctx.arc(x, y, r, 0, Math.PI * 2);
+    ctx.fillStyle = `hsl(${Math.random() * 360}, 100%, 60%)`;
+    ctx.fill();
+  }
 
-      el.animate([
-        {transform: `translate(0,0) rotate(0deg)`, opacity:1},
-        {transform: `translate(${destX}vw, ${destY}vh) rotate(${rotate}deg)`, opacity:0.9}
-      ], {duration: duration, easing: 'cubic-bezier(.2,.6,.2,1)'});
+  setInterval(firework, 70);
 
-      setTimeout(()=> el.remove(), duration+50);
+  /* Background Music (Soft Tone) */
+  let audioCtx;
+  let oscillator;
+  let isPlaying = false;
+
+  const btn = document.getElementById("musicBtn");
+
+  btn.addEventListener("click", () => {
+    if (!isPlaying) {
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      oscillator = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+
+      oscillator.type = "sine";
+      oscillator.frequency.setValueAtTime(432, audioCtx.currentTime);
+      gain.gain.value = 0.05;
+
+      oscillator.connect(gain);
+      gain.connect(audioCtx.destination);
+      oscillator.start();
+
+      btn.textContent = "🔇 Music Off";
+      isPlaying = true;
+    } else {
+      oscillator.stop();
+      audioCtx.close();
+      btn.textContent = "🔊 Music On";
+      isPlaying = false;
     }
+  });
+</script>
 
-    let running = false; let intervalId = null;
-    function startConfetti(){
-      if(running) return;
-      running = true;
-      intervalId = setInterval(()=>{
-        // spawn 6 pieces per tick
-        for(let i=0;i<6;i++) makePiece();
-      },120);
-      btn.textContent = 'Stop 🎈';
-    }
-    function stopConfetti(){
-      running = false;
-      clearInterval(intervalId);
-      btn.textContent = 'Celebrate 🎉';
-    }
-
-    btn.addEventListener('click', ()=> running ? stopConfetti() : startConfetti());
-
-    // Auto-fire once on load
-    window.addEventListener('load', ()=>{
-      startConfetti();
-      setTimeout(stopConfetti, 4500);
-    });
-  </script>
 </body>
 </html>
