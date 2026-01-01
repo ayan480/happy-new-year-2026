@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <title>Welcome 2026 | Ayan</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
 <style>
 :root {
@@ -138,32 +138,32 @@ canvas {
   animation-delay: 5.3s;
 }
 
+/* Name reveal */
+.name {
+  margin-top: 32px;
+  font-size: 22px;
+  letter-spacing: 8px;
+  color: var(--gold);
+  opacity: 0;
+  animation: nameReveal 2s ease forwards;
+  animation-delay: 6.8s;
+}
+
+@keyframes nameReveal {
+  from {
+    opacity: 0;
+    letter-spacing: 20px;
+    filter: blur(6px);
+  }
+  to {
+    opacity: 1;
+    letter-spacing: 8px;
+    filter: blur(0);
+  }
+}
+
 @keyframes fadeIn {
   to { opacity: 1; }
-}
-
-/* Signature */
-.signature {
-  margin-top: 35px;
-  width: 200px;
-  opacity: 0;
-  animation: fadeIn 1.5s forwards;
-  animation-delay: 6.8s;
-}
-
-.signature path {
-  fill: none;
-  stroke: var(--gold);
-  stroke-width: 3;
-  stroke-linecap: round;
-  stroke-dasharray: 1000;
-  stroke-dashoffset: 1000;
-  animation: draw 3s ease forwards;
-  animation-delay: 6.8s;
-}
-
-@keyframes draw {
-  to { stroke-dashoffset: 0; }
 }
 
 /* Music button */
@@ -215,10 +215,7 @@ canvas {
     Let it be a year of meaningful progress and well-earned success.
   </div>
 
-  <!-- Animated Signature -->
-  <svg class="signature" viewBox="0 0 400 120">
-    <path d="M20 80 Q60 20 110 70 T200 60 Q260 30 320 70" />
-  </svg>
+  <div class="name">— AYAN</div>
 </div>
 
 <script>
